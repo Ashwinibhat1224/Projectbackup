@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>MARIO GAME</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body onkeydown='getKeyAndMove(event)'>
+    <center>
+    <form name="form">
+        <b>Enter the number of rows:</b>
+        <input type="text" name="row" id="rows"><br><br>
+        <b>Enter the number of column:</b>
+        <input type="text" name="col" id="cols1"><br><br>
+        <input type="button" onclick="create()" value="Start">
+    </form>
+    <div id="t">
+    </div>
+</center>
+    <script>
+        /*function display() {
+            var result = [];
+            var result_value = [];
+            var onum = document.forms.form.num.value;
+            for (var i = 0; i < a.length; i++) {
+                if (a[i] == onum) {
+                    result.push(i);
+                    result_value.push(b[i]);
+                }
+            }
+
+            console.log("occurence index value " + result) + "<br>";
+            console.log("the value of b from index a array " + result_value);
+        }*/
+        var row,col;
+        var a = [];
+        var b = [];
+        function create() {
+            col = document.getElementById('cols1').value;
+            console.log(col);
+            row = document.getElementById('rows').value;
+            console.log(row);
+
+            //For Food image random number generation
+            
+            var c = Math.floor((+row + +col) / 2);
+
+            var random1, random2;
+            var i = 0;
+            while (i < c) {
+
+                var random1 = Math.floor((Math.random() * row) + 0);
+                var random2 = Math.floor((Math.random() * col) + 0);
+                var temp = 0;
+
+                if (a.length == 0 && b.length == 0) {
+                    a[i] = random1;
+                    b[i] = random2;
+                    i++;
+                }
+                else {
+                    for (k = 0; k < i; k++) {
+                        if (a[k] == random1 && b[k] == random2) {
+                            break;
+                        }
+                        else {
+                            temp++;
+                        }
+                    }
+                    if (temp == i) {
+                        a[i] = random1;
+                        b[i] = random2;
+                        i++;
+                    }
+                }
+            }
+
+            console.log(a);
+            console.log(b);
+
+            //For Mario image random number generation
+            var marioX;
+            var marioY;
+            var n = 0;
+            while (n < 1) {
+                var ran1 = Math.floor((Math.random() * row) + 0);
+                var ran2 = Math.floor((Math.random() * col) + 0);
+                var temp = 0;
+                for (var k = 0; k < a.length; k++) {
+                    if (a[k] == ran1 && b[k] == ran2) {
+                        break;
+                    }
+                    else {
+                        temp++;
+                    }
+                }
+                if (temp == c) {
+                    marioX = ran1;
+                    marioY = ran2;
+                    n = c;
+                }
+            }
+            console.log(marioX);
+            console.log(marioY);
+
+            var k = 0;
+            var table = '';
+            var result = [];
+            var result_value = [];
+
+            for (var i = 0; i < row; i++) {
+                table += '<tr>'
+                var result = [];
+                for (var j = 0; j < a.length; j++) {
+
+                    if (a[j] == i) {
+                        result.push(j);
+                        //result_value.push(b[j]);
+
+                    }
+                }
+                //console.log(result);
+                var clarrB = [];
+                for (var m = 0; m < result.length; m++) {
+
+                    clarrB.push(b[result[m]]);
+
+                }
+                console.log(clarrB);
+                for (var k = 0; k < col; k++) {
+                    var cols = document.createElement('td');
+                    if (marioX == i && marioY == k)
+                        table += '<td id=' + i + '-' + k + '>' + '<img src="mario.jpg" id="image1"' + '</td>'
+
+                    else if (clarrB.indexOf(k) != -1) {
+
+                        table += '<td id=' + i + '-' + k + '>' + '<img src="food.png"' + '</td>'
+                    }
+                    else {
+                        table += '<td id=' + i + '-' + k + '>' + '</td>'
+                    }
+
+                }
+
+                table += '</tr>'
+            }
+
+            document.getElementById("t").innerHTML = '<table border=1>' + table + '</table>';
+        }
+        
+        var steps=0;
+        var myVar;
+        function getKeyAndMove(e) {
+  
+            var key_code = e.which || e.keyCode;
+            switch (key_code) {
+                case 37:clearInterval(myVar);
+                    moveLeft();//left arrow key
+                    console.log("Left key pressed");
+                    break;
+                case 38:clearInterval(myVar);
+                    moveUp();//Up arrow key
+                    console.log("Up key pressed");
+                    break;
+                case 39:clearInterval(myVar);
+                    moveRight();//right arrow key
+                    console.log("Right key pressed");
+                    break;
+                case 40:clearInterval(myVar);
+                    moveDown();//down arrow key
+                    console.log("Down key pressed");
+                    break;
+            }
+        }
+        function moveLeft() {
+            var newParent = [];
+            var newPosition;
+            
+            var marioParent = document.getElementById('image1').parentNode.id;
+            var mario = document.getElementById('image1');
+
+            var newParent = marioParent.split('-');
+            newParent[0] = Number(newParent[0]);
+            newParent[1] = Number(newParent[1]);
+            console.log(newParent);
+
+            if(newParent[1]>0)
+            {
+             newParent[1] = Number(newParent[1]) - 1;
+            document.getElementById(marioParent).removeChild(mario);
+            newPosition = newParent[0] + "-" + newParent[1];
+            var checkPosition = newPosition.split("-");
+            
+            var storeIndex=[];
+            for (var i=0;i<a.length;i++)
+            {
+                if(a[i]==checkPosition[0])
+                    storeIndex.push(i);
+            }
+
+            console.log(storeIndex);
+            var count = 0;
+
+            for(var j=0;j<storeIndex.length;j++)
+            {
+                if(b[storeIndex[j]]==checkPosition[1]){
+                    count++;
+                    a.splice(storeIndex[j], 1);
+                    b.splice(storeIndex[j], 1);
+                    break;
+                }
+            }
+            console.log("value of a  " + a);
+            console.log("value  of b" + b);
+            if(count>0)
+            {
+                document.getElementById(newPosition).firstChild.remove();
+            }
+            document.getElementById(newPosition).appendChild(mario);
+            steps++;
+            console.log(steps);
+            if(a.length==0)
+            {
+                displaymsg();
+                return false;
+            }
+            myVar=setTimeout(function(){moveLeft();},1000);
+        }
+        else
+            moveRight();
+    }
+            
+        function moveUp() {
+            var newParent = [];
+            var newPosition;
+
+            var marioParent = document.getElementById('image1').parentNode.id;
+            var mario = document.getElementById('image1');
+            //console.log(marioParent);
+
+            newParent = marioParent.split('-');
+            newParent[0] = Number(newParent[0]);
+            newParent[1] = Number(newParent[1]);
+            console.log(newParent);
+            if(newParent[0]>0)
+            {
+             newParent[0] = Number(newParent[0]) - 1;
+            document.getElementById(marioParent).removeChild(mario);
+            newPosition = newParent[0] + "-" + newParent[1];
+            var checkPosition = newPosition.split("-");
+            
+            var storeIndex=[];
+            for (var i=0;i<a.length;i++)
+            {
+                if(a[i]==checkPosition[0])
+                    storeIndex.push(i);
+            }
+
+            console.log(storeIndex);
+            var count = 0;
+
+            for(var j=0;j<storeIndex.length;j++)
+            {
+                if(b[storeIndex[j]]==checkPosition[1]){
+                    count++;
+                    a.splice(storeIndex[j], 1);
+                    b.splice(storeIndex[j], 1);
+                    break;
+                }
+            }
+            console.log("value of a  " + a);
+            console.log("value  of b" + b);
+            if(count>0)
+            {
+                document.getElementById(newPosition).firstChild.remove();
+            }
+            document.getElementById(newPosition).appendChild(mario);
+            steps++;
+            console.log(steps);
+            if(a.length==0)
+            {
+                displaymsg();
+                return false;
+            }
+            myVar=setTimeout(function(){moveUp();},1000);
+        }
+        else
+            moveDown();
+    }
+        function moveRight() {
+            var newParent = [];
+            var newPosition;
+            var marioParent = document.getElementById('image1').parentNode.id;
+            var mario = document.getElementById('image1');
+            //console.log(marioParent);
+
+            var newParent = marioParent.split('-');
+            newParent[0] = Number(newParent[0]);
+            newParent[1] = Number(newParent[1]);
+            console.log(newParent);
+            if(newParent[1]<col-1)
+            {
+             newParent[1] = Number(newParent[1]) + 1;
+            document.getElementById(marioParent).removeChild(mario);
+            newPosition = newParent[0] + "-" + newParent[1];
+            var checkPosition = newPosition.split("-");
+            
+            var storeIndex=[];
+            for (var i=0;i<a.length;i++)
+            {
+                if(a[i]==checkPosition[0])
+                    storeIndex.push(i);
+            }
+
+            console.log(storeIndex);
+            var count = 0;
+
+            for(var j=0;j<storeIndex.length;j++)
+            {
+                if(b[storeIndex[j]]==checkPosition[1]){
+                    count++;
+                    a.splice(storeIndex[j], 1);
+                    b.splice(storeIndex[j], 1);
+                    break;
+                }
+            }
+            console.log("value of a  " + a);
+            console.log("value  of b" + b);
+            if(count>0)
+            {
+                document.getElementById(newPosition).firstChild.remove();
+            }
+            document.getElementById(newPosition).appendChild(mario);
+            steps++;
+            console.log(steps);
+            if(a.length==0)
+            {
+                
+                displaymsg();
+                return false;
+            }
+            myVar=setTimeout(function(){moveRight();},1000);
+        }
+        else
+            moveLeft();
+    }
+        function moveDown() {
+            var newParent = [];
+            var newPosition;
+            var marioParent = document.getElementById('image1').parentNode.id;
+            var mario = document.getElementById('image1');
+            //console.log(marioParent);
+
+            var newParent = marioParent.split('-');
+            newParent[0] = Number(newParent[0]);
+            newParent[1] = Number(newParent[1]);
+            console.log(newParent);
+            
+            if(newParent[0]<row-1)
+            {
+             newParent[0] = Number(newParent[0]) +1;
+            document.getElementById(marioParent).removeChild(mario);
+            newPosition = newParent[0] + "-" + newParent[1];
+            var checkPosition = newPosition.split("-");
+            
+            var storeIndex=[];
+            for (var i=0;i<a.length;i++)
+            {
+                if(a[i]==checkPosition[0])
+                    storeIndex.push(i);
+            }
+
+            console.log(storeIndex);
+            var count = 0;
+
+            for(var j=0;j<storeIndex.length;j++)
+            {
+                if(b[storeIndex[j]]==checkPosition[1]){
+                    count++;
+                    a.splice(storeIndex[j], 1);
+                    b.splice(storeIndex[j], 1);
+                    break;
+                }
+            }
+            console.log("value of a  " + a);
+            console.log("value  of b" + b);
+            if(count>0)
+            {
+                document.getElementById(newPosition).firstChild.remove();
+            }
+            document.getElementById(newPosition).appendChild(mario);
+            steps++;
+            console.log(steps);
+            if(a.length==0)
+            {
+                
+                displaymsg();
+                return false;
+            }
+            myVar=setTimeout(function(){moveDown();},1000);
+        }
+        else
+            moveUp();
+    }
+function displaymsg()
+{
+    document.write("<center><b>GAME COMPLETED !!!</b></center><br>");
+    document.write("<b><center>Using "+steps+" steps</b></center><br>");
+    document.write("<center><input type='button' value='RESTART' onclick='window.location.reload()'/></center>");
+}
+
+
+    </script>
+</body>
+
+</html>
